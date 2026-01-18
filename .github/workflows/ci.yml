@@ -37,7 +37,7 @@ jobs:
 
       # ========== TESTS ==========
       - name: Run Unit Tests
-        run: mvn test
+        run: mvn test -e -X
 
       # ========== CHECKSTYLE (Linting) ==========
       - name: Run Checkstyle
