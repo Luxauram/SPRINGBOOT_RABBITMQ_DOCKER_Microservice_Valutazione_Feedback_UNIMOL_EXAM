@@ -44,10 +44,7 @@ jobs:
         run: mvn checkstyle:check
         continue-on-error: true
 
-      # ========== SPOTBUGS (Static Analysis) ==========
-      - name: Run SpotBugs
-        run: mvn spotbugs:check
-        continue-on-error: true
+      # ========== ERROR PRUNE (To Do) ==========
 
       # ========== JACOCO (Code Coverage) ==========
       - name: Generate JaCoCo Coverage Report
