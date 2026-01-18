@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
-    ports:
-      - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
@@ -21,6 +19,8 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
+    expose:
+      - 8080
     depends_on:
       microservice-user-role:
         condition: service_started
@@ -34,8 +34,6 @@ services:
     build:
       context: .
       dockerfile: microservice-user-role/Dockerfile
-    ports:
-      - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-users:5432/${DB_PG_NAME_UR:-utenti_db}
@@ -63,6 +61,8 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
+    expose:
+      - 8081
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -76,8 +76,6 @@ services:
     build:
       context: .
       dockerfile: microservice-assessment-feedback/Dockerfile
-    ports:
-      - "8082:8082"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-assessment:5432/${DB_PG_NAME_AF:-assessment_feedback_db}
@@ -126,6 +124,8 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
+    expose:
+      - 8082
     depends_on:
       rabbitmq:
         condition: service_healthy
