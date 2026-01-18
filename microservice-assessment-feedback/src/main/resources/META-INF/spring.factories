@@ -1,1 +1,1 @@
-org.springframework.boot.env.EnvironmentPostProcessor=it.unimol.microservice_assessment_feedback.config.DotenvEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=it.unimol.microserviceassessmentfeedback.config.DotenvEnvironmentPostProcessor

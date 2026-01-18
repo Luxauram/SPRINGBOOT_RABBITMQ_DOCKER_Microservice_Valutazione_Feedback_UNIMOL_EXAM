@@ -1,1 +1,1 @@
-org.springframework.boot.env.EnvironmentPostProcessor=it.unimol.api_gateway.config.DotenvEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=it.unimol.apigateway.config.DotenvEnvironmentPostProcessor
