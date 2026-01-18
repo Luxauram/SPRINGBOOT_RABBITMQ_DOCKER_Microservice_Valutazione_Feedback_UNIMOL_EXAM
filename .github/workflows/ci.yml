@@ -1,10 +1,16 @@
-name: CI Pipeline - Unimol Microservices
+name: CI Pipeline - Unimol Exam Microservices + Automated Software Delivery
 
 on:
   push:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+  issues: write
 
 jobs:
   build-and-test:
