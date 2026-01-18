@@ -1,7 +1,6 @@
 services:
   # Api-Gateway
   api-gateway:
-    container_name: unimol-api-gateway
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
@@ -32,7 +31,6 @@ services:
 
   # Microservizio: User Role Service
   microservice-user-role:
-    container_name: unimol-microservice-user-role
     build:
       context: .
       dockerfile: microservice-user-role/Dockerfile
@@ -75,7 +73,6 @@ services:
 
   # Microservizio: Assessment Feedback Service
   microservice-assessment-feedback:
-    container_name: unimol-microservice-assessment-feedback
     build:
       context: .
       dockerfile: microservice-assessment-feedback/Dockerfile
@@ -139,7 +136,6 @@ services:
 
   # ====================== RABBITMQ Message Broker ==========================
   rabbitmq:
-    container_name: unimol-rabbitmq
     image: rabbitmq:3.12-management-alpine
     ports:
       - "5672:5672"
@@ -161,7 +157,6 @@ services:
 
   # ====================== DBs POSTGRES ==========================
   postgres-users:
-    container_name: unimol-postgres-users
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${DB_PG_NAME_UR:-utenti_db}
@@ -184,7 +179,6 @@ services:
       - unimol-network
 
   postgres-assessment:
-    container_name: unimol-postgres-assessment
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${DB_PG_NAME_AF:-assessment_feedback_db}
