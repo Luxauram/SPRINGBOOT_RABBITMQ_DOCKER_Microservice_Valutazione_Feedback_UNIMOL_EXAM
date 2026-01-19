@@ -17,6 +17,7 @@ import it.unimol.microserviceuserrole.dto.role.RoleDto;
 import it.unimol.microserviceuserrole.dto.user.UserDto;
 import it.unimol.microserviceuserrole.dto.user.UserProfileDto;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,7 @@ class MessageServiceTest {
   private RoleDto testRoleDto;
 
   @BeforeEach
+  @SuppressWarnings("JavaUtilDate")
   void setUp() {
     // Inject configuration values
     ReflectionTestUtils.setField(messageService, "mainExchange", "unimol.exchange");
@@ -69,8 +71,8 @@ class MessageServiceTest {
         "test@example.com",
         "John",
         "Doe",
-        LocalDateTime.now(),
-        LocalDateTime.now(),
+        LocalDateTime.now(ZoneId.systemDefault()),
+        LocalDateTime.now(ZoneId.systemDefault()),
         testRoleDto
     );
 
@@ -81,8 +83,8 @@ class MessageServiceTest {
         "John",
         "Doe",
         "STUDENT",
-        LocalDateTime.now(),
-        LocalDateTime.now()
+        LocalDateTime.now(ZoneId.systemDefault()),
+        LocalDateTime.now(ZoneId.systemDefault())
     );
   }
 

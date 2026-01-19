@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 /**
@@ -52,7 +53,7 @@ public class User {
    * Inizializza automaticamente la data di creazione.
    */
   public User() {
-    this.createdAt = LocalDateTime.now();
+    this.createdAt = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   /**
@@ -253,7 +254,7 @@ public class User {
    * Aggiorna la data dell'ultimo accesso all'istante corrente.
    */
   public void updateLastLogin() {
-    this.lastLogin = LocalDateTime.now();
+    this.lastLogin = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   @Override
@@ -261,11 +262,10 @@ public class User {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    if (o instanceof User user) {
+      return Objects.equals(id, user.id);
     }
-    User user = (User) o;
-    return Objects.equals(id, user.id);
+    return false;
   }
 
   @Override

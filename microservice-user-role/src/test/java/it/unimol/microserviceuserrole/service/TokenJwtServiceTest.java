@@ -106,6 +106,7 @@ class TokenJwtServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testIsTokenValid_ExpiredToken() throws Exception {
     // Arrange - create an expired token
     long now = System.currentTimeMillis();
@@ -195,6 +196,7 @@ class TokenJwtServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testParseToken_ExpiredToken() throws Exception {
     // Arrange - create an expired token
     long now = System.currentTimeMillis();

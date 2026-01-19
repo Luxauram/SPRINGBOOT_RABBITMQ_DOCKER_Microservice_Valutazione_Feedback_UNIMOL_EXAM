@@ -9,6 +9,7 @@ import it.unimol.microserviceuserrole.model.User;
 import it.unimol.microserviceuserrole.repository.UserRepository;
 import it.unimol.microserviceuserrole.util.PasswordUtils;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,7 @@ public class AuthService {
     if (existsUser.isPresent()) {
       User user = existsUser.get();
       if (PasswordUtils.verificaPassword(user.getPassword(), password)) {
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(LocalDateTime.now(ZoneId.systemDefault()));
 
         userRepository.save(user);
         return tokenService.generateToken(user.getId(), user.getUsername(), user.getRole().getId());

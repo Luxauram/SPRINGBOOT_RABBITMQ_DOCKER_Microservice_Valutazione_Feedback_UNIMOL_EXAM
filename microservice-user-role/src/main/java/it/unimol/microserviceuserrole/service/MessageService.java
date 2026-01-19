@@ -249,6 +249,7 @@ public class MessageService {
   // ===================================================================
   //  PRIVATE UTILITY METHODS
   // ===================================================================
+  @SuppressWarnings("JavaUtilDate")
   private void publishUnifiedMessage(String routingKey, Map<String, Object> message,
       String correlationId) {
     logger.info("📡 Invio messaggio UNIFICATO a RabbitMQ... [ID: {}]", correlationId);

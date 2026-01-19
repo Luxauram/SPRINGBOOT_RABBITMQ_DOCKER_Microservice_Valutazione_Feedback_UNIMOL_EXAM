@@ -26,6 +26,7 @@ import it.unimol.microserviceuserrole.service.RoleService;
 import it.unimol.microserviceuserrole.service.TokenJwtService;
 import it.unimol.microserviceuserrole.service.UserService;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,7 @@ class UserControllerTest {
   private AssignRoleDto assignRoleDto;
 
   @BeforeEach
+  @SuppressWarnings("JavaUtilDate")
   void setUp() {
     authHeader = "Bearer jwt.token.here";
     token = "jwt.token.here";
@@ -87,8 +89,8 @@ class UserControllerTest {
         "test@example.com",
         "John",
         "Doe",
-        LocalDateTime.now(),
-        LocalDateTime.now(),
+        LocalDateTime.now(ZoneId.systemDefault()),
+        LocalDateTime.now(ZoneId.systemDefault()),
         roleDto
     );
 
@@ -99,8 +101,8 @@ class UserControllerTest {
         "John",
         "Doe",
         "STUDENT",
-        LocalDateTime.now(),
-        LocalDateTime.now()
+        LocalDateTime.now(ZoneId.systemDefault()),
+        LocalDateTime.now(ZoneId.systemDefault())
     );
 
     changePasswordDto = new ChangePasswordRequestDto("oldPassword", "newPassword123");

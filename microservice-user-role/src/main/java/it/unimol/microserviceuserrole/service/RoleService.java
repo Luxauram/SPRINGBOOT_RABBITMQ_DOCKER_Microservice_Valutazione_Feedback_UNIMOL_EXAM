@@ -109,7 +109,7 @@ public class RoleService {
    *
    * @param token        Il token JWT dell'utente.
    * @param requiredRole Il role richiesto per l'operazione.
-   * @throws UnknownUserException Se l'utente non esiste o il token non è valido.
+   * @throws SecurityException Se l'utente non esiste o il token non è valido.
    */
   public void checkRole(String token, RoleType requiredRole) {
     if (!tokenService.isTokenValid(token)) {

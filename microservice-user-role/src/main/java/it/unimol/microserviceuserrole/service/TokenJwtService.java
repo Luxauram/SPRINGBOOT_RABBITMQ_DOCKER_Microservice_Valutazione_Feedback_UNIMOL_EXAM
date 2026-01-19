@@ -157,6 +157,7 @@ public class TokenJwtService {
    * @param token Il token JWT da verificare.
    * @return true se il token è scaduto, false altrimenti.
    */
+  @SuppressWarnings("JavaUtilDate")
   private boolean isTokenExpired(String token) {
     return extractExpiration(token).before(new Date());
   }
@@ -179,6 +180,7 @@ public class TokenJwtService {
    * @param role     Il role dell'utente.
    * @return Un oggetto TokenJWTDto contenente il token JWT generato.
    */
+  @SuppressWarnings("JavaUtilDate")
   public TokenDto generateToken(String userId, String username, String role) {
     Map<String, Object> claims = new HashMap<>();
 
@@ -204,6 +206,7 @@ public class TokenJwtService {
    * @param token Il token JWT da analizzare.
    * @return Un oggetto TokenJWTDto contenente il token JWT.
    */
+  @SuppressWarnings("JavaUtilDate")
   public TokenDto parseToken(String token) {
     long remainingTime = 0;
     try {

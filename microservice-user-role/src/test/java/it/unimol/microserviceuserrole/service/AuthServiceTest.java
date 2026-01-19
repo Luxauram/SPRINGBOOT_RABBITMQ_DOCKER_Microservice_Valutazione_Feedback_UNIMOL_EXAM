@@ -22,6 +22,7 @@ import it.unimol.microserviceuserrole.model.User;
 import it.unimol.microserviceuserrole.repository.UserRepository;
 import it.unimol.microserviceuserrole.util.PasswordUtils;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -163,9 +164,10 @@ class AuthServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testLogin_UpdatesLastLogin() throws AuthException, UnknownUserException {
     // Arrange
-    LocalDateTime beforeLogin = LocalDateTime.now().minusMinutes(1);
+    LocalDateTime beforeLogin = LocalDateTime.now(ZoneId.systemDefault()).minusMinutes(1);
     testUser.setLastLogin(beforeLogin);
 
     when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
@@ -248,9 +250,10 @@ class AuthServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testUpdateLastLogin_UpdatesTimestamp() {
     // Arrange
-    LocalDateTime before = LocalDateTime.now().minusHours(1);
+    LocalDateTime before = LocalDateTime.now(ZoneId.systemDefault()).minusHours(1);
     testUser.setLastLogin(before);
 
     when(userRepository.findById("user123")).thenReturn(Optional.of(testUser));
