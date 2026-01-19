@@ -6,6 +6,8 @@ import it.unimol.microserviceassessmentfeedback.service.AssessmentService;
 import it.unimol.microserviceassessmentfeedback.service.events.NotificationService;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.Map;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
   /**
    * Verifica se l'assignment è stato consegnato in tempo.
    */
+  @SuppressWarnings("unused")
   private boolean isSubmissionOnTime(String assignmentId, Long submissionTime) {
     logger.info("⏰ DEADLINE CHECK - Assignment: {} | Submission time: {}", assignmentId,
         submissionTime);
@@ -194,7 +197,8 @@ public class AssignmentConsumerService extends BaseEventConsumer {
       }
 
       // 5. Log per analytics
-      updateCourseStatistics(courseId, "assignment_updated_" + updateType.toLowerCase(), teacherId);
+      updateCourseStatistics(courseId, "assignment_updated_"
+          + updateType.toLowerCase(Locale.ROOT), teacherId);
 
       logger.info("Assignment update processed successfully for assignment: {} | Update: {}",
           assignmentId, updateType);
@@ -224,7 +228,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
       assessment.setAssessmentDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(submissionTime),
           java.time.ZoneId.systemDefault()));
     } else {
-      assessment.setAssessmentDate(LocalDateTime.now());
+      assessment.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     String notes = "Assignment submitted - awaiting evaluation";
@@ -249,7 +253,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
 
   private void updateCourseStatistics(String courseId, String eventType, String studentId) {
     logger.info("📊 STATS UPDATE - Course: {} | Event: {} | Student: {} | Timestamp: {}",
-        courseId, eventType, studentId, LocalDateTime.now());
+        courseId, eventType, studentId, LocalDateTime.now(ZoneId.systemDefault()));
 
     // TODO
   }
@@ -282,6 +286,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
     }
   }
 
+  @SuppressWarnings("unused")
   private void setupAssignmentAssessmentCriteria(String assignmentId, String courseId,
       String teacherId,
       Integer maxScore, String assignmentType) {
@@ -291,6 +296,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
     // TODO
   }
 
+  @SuppressWarnings("unused")
   private void setupAssignmentFeedbackTemplate(String assignmentId, String assignmentType,
       String description) {
     logger.info("📝 SETUP FEEDBACK TEMPLATE - Assignment: {} | Type: {}",
@@ -299,6 +305,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
     // TODO
   }
 
+  @SuppressWarnings("unused")
   private void scheduleAssignmentDeadlineReminders(String assignmentId, String courseId,
       Long dueDate) {
     if (dueDate != null) {
@@ -310,6 +317,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
     }
   }
 
+  @SuppressWarnings("unused")
   private void setupPeerReviewAssessmentTemplate(String assignmentId, String courseId,
       Integer maxScore) {
     logger.info("👥 PEER REVIEW SETUP - Assignment: {} | Course: {} | Score: {}",
@@ -318,12 +326,14 @@ public class AssignmentConsumerService extends BaseEventConsumer {
     // TODO
   }
 
+  @SuppressWarnings("unused")
   private void updateAssignmentAssessmentCriteria(String assignmentId, Integer maxScore,
       String description) {
     logger.info("🔄 UPDATE ASSESSMENT CRITERIA - Assignment: {} | New Max Score: {}",
         assignmentId, maxScore);
   }
 
+  @SuppressWarnings("unused")
   private void handleDueDateChange(String assignmentId, String courseId, Long newDueDate) {
     logger.info("📅 DUE DATE CHANGED - Assignment: {} | New Due Date: {}",
         assignmentId, LocalDateTime.ofInstant(Instant.ofEpochMilli(newDueDate),
@@ -337,6 +347,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
         || "REQUIREMENTS_CHANGED".equals(updateType);
   }
 
+  @SuppressWarnings("unused")
   private void updateAssignmentFeedbackTemplate(String assignmentId, String description) {
     logger.info("📝 UPDATE FEEDBACK TEMPLATE - Assignment: {}", assignmentId);
   }
@@ -348,6 +359,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
   /**
    * Analizza il contenuto della submission per estrarre metadata.
    */
+  @SuppressWarnings("unused")
   private void analyzeSubmissionContent(String assignmentId, String content, String fileName) {
     logger.info("🔍 CONTENT ANALYSIS - Assignment: {} | File: {} | Content length: {}",
         assignmentId, fileName, content != null ? content.length() : 0);
@@ -357,6 +369,7 @@ public class AssignmentConsumerService extends BaseEventConsumer {
   /**
    * Gestisce submission multiple dello stesso assignment.
    */
+  @SuppressWarnings("unused")
   private void handleDuplicateSubmission(String assignmentId, String studentId) {
     logger.warn("🔄 DUPLICATE SUBMISSION - Assignment: {} | Student: {} | Policy: Keep latest",
         assignmentId, studentId);

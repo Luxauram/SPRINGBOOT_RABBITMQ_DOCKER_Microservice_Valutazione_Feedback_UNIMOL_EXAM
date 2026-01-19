@@ -12,6 +12,7 @@ import it.unimol.microserviceassessmentfeedback.model.TeacherSurvey;
 import it.unimol.microserviceassessmentfeedback.repository.SurveyResponseRepository;
 import it.unimol.microserviceassessmentfeedback.repository.TeacherSurveyRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +67,7 @@ public class SurveyResponseService {
    * @param userId identificativo dell'utente richiedente
    * @return lista delle risposte del questionario
    */
+  @SuppressWarnings("unused")
   public List<SurveyResponseDto> getResponsesBySurveyId(String surveyId, String userId) {
     TeacherSurvey survey = surveyRepository.findById(surveyId)
         .orElseThrow(
@@ -83,6 +85,7 @@ public class SurveyResponseService {
    * @param userId identificativo dell'utente richiedente
    * @return lista delle risposte contenenti commenti
    */
+  @SuppressWarnings("unused")
   public List<SurveyResponseDto> getSurveyComments(String surveyId, String userId) {
     TeacherSurvey survey = surveyRepository.findById(surveyId)
         .orElseThrow(
@@ -104,6 +107,7 @@ public class SurveyResponseService {
    * @param userId identificativo dell'utente richiedente
    * @return mappa questionId → media delle valutazioni
    */
+  @SuppressWarnings("unused")
   public Map<String, Double> getSurveyResults(String surveyId, String userId) {
     TeacherSurvey survey = surveyRepository.findById(surveyId)
         .orElseThrow(
@@ -181,7 +185,7 @@ public class SurveyResponseService {
           "Non è possibile inviare più risposte per la stessa domanda");
     }
 
-    LocalDateTime submissionTime = LocalDateTime.now();
+    LocalDateTime submissionTime = LocalDateTime.now(ZoneId.systemDefault());
     List<SurveyResponse> responses = responseDtos.stream()
         .map(dto -> {
           SurveyResponse response = convertToEntity(dto);
@@ -217,6 +221,7 @@ public class SurveyResponseService {
    * @param survey questionario associato alle risposte
    * @throws IllegalArgumentException se una risposta non rispetta i vincoli
    */
+  @SuppressWarnings("unused")
   private void validateSurveyResponses(List<SurveyResponseDto> responseDtos, TeacherSurvey survey) {
     for (SurveyResponseDto dto : responseDtos) {
 
@@ -262,7 +267,7 @@ public class SurveyResponseService {
 
     SurveyResponse response = convertToEntity(responseDto);
     response.setSurvey(survey);
-    response.setSubmissionDate(LocalDateTime.now());
+    response.setSubmissionDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     SurveyResponse savedResponse = responseRepository.save(response);
     SurveyResponseDto result = convertToDto(savedResponse);
@@ -292,7 +297,9 @@ public class SurveyResponseService {
     response.setNumericRating(dto.getNumericRating());
     response.setTextComment(dto.getTextComment());
     response.setSubmissionDate(
-        dto.getSubmissionDate() != null ? dto.getSubmissionDate() : LocalDateTime.now());
+        dto.getSubmissionDate() != null
+            ? dto.getSubmissionDate()
+            : LocalDateTime.now(ZoneId.systemDefault()));
     return response;
   }
 }

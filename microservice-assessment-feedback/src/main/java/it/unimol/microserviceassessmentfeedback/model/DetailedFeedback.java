@@ -13,6 +13,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -85,16 +86,14 @@ public class DetailedFeedback {
   }
 
   // ============ Metodi Override ============
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof DetailedFeedback that)) {
       return false;
     }
-    DetailedFeedback that = (DetailedFeedback) o;
     return Objects.equals(id, that.id)
         && Objects.equals(assessment, that.assessment)
         && Objects.equals(feedbackText, that.feedbackText)
@@ -212,8 +211,8 @@ public class DetailedFeedback {
     if (id == null || id.isEmpty()) {
       id = UUID.randomUUID().toString();
     }
-    createdAt = LocalDateTime.now();
-    updatedAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now(ZoneId.systemDefault());
+    updatedAt = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   /**
@@ -222,7 +221,7 @@ public class DetailedFeedback {
    */
   @PreUpdate
   protected void onUpdate() {
-    updatedAt = LocalDateTime.now();
+    updatedAt = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   /**

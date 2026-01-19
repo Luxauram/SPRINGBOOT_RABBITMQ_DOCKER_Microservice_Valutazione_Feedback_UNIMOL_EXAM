@@ -21,6 +21,7 @@ import it.unimol.microserviceassessmentfeedback.messaging.publishers.TeacherSurv
 import it.unimol.microserviceassessmentfeedback.model.TeacherSurvey;
 import it.unimol.microserviceassessmentfeedback.repository.TeacherSurveyRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +77,7 @@ class TeacherSurveyServiceTest {
     testSurvey.setTitle("Course Evaluation");
     testSurvey.setDescription("Survey description");
     testSurvey.setQuestions(Arrays.asList(testQuestion));
-    testSurvey.setCreationDate(LocalDateTime.now());
+    testSurvey.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     testSurveyDto = TeacherSurveyDto.builder()
         .id("survey1")
@@ -405,7 +406,7 @@ class TeacherSurveyServiceTest {
   @Test
   void testChangeSurveyStatus_ClosedToActive() {
     testSurvey.setStatus(SurveyStatus.CLOSED);
-    testSurvey.setClosingDate(LocalDateTime.now());
+    testSurvey.setClosingDate(LocalDateTime.now(ZoneId.systemDefault()));
     when(surveyRepository.findById("survey1")).thenReturn(Optional.of(testSurvey));
     when(surveyRepository.save(any(TeacherSurvey.class))).thenReturn(testSurvey);
 

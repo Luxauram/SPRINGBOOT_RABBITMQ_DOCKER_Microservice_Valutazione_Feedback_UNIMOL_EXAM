@@ -57,6 +57,7 @@ public class UserConsumerService extends BaseEventConsumer {
     processMessage(message, "USER_DELETED");
   }
 
+  @SuppressWarnings({"unused", "UnusedVariable"})
   private void processTeacherCreated(Map<String, Object> message) {
     String teacherId = getStringValue(message, "teacherId");
     String firstName = getStringValue(message, "firstName");
@@ -96,6 +97,7 @@ public class UserConsumerService extends BaseEventConsumer {
     }
   }
 
+  @SuppressWarnings({"unused", "UnusedVariable"})
   private void processStudentCreated(Map<String, Object> message) {
     String studentId = getStringValue(message, "studentId");
     String firstName = getStringValue(message, "firstName");
@@ -140,6 +142,7 @@ public class UserConsumerService extends BaseEventConsumer {
     }
   }
 
+  @SuppressWarnings({"unused", "UnusedVariable"})
   private void processUserDeleted(Map<String, Object> message) {
     String userId = getStringValue(message, "userId");
     String userType = getStringValue(message, "userType");

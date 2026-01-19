@@ -129,10 +129,9 @@ public class TeacherSurveyDto {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof TeacherSurveyDto that)) {
       return false;
     }
-    TeacherSurveyDto that = (TeacherSurveyDto) o;
     return Objects.equals(id, that.id)
         && Objects.equals(courseId, that.courseId)
         && Objects.equals(teacherId, that.teacherId)
@@ -415,10 +414,9 @@ public class TeacherSurveyDto {
       if (this == o) {
         return true;
       }
-      if (o == null || getClass() != o.getClass()) {
+      if (!(o instanceof SurveyQuestionDto that)) {
         return false;
       }
-      SurveyQuestionDto that = (SurveyQuestionDto) o;
       return Objects.equals(id, that.id)
           && Objects.equals(questionText, that.questionText)
           && questionType == that.questionType

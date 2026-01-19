@@ -13,6 +13,7 @@ import it.unimol.microserviceassessmentfeedback.dto.TeacherSurveyDto.SurveyQuest
 import it.unimol.microserviceassessmentfeedback.enums.QuestionType;
 import it.unimol.microserviceassessmentfeedback.enums.SurveyStatus;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ class TeacherSurveyMessageServiceTest {
         .title("Course Evaluation")
         .description("Survey description")
         .questions(Arrays.asList(testQuestion))
-        .creationDate(LocalDateTime.now())
+        .creationDate(LocalDateTime.now(ZoneId.systemDefault()))
         .build();
   }
 
@@ -117,7 +118,7 @@ class TeacherSurveyMessageServiceTest {
   @Test
   void testPublishSurveyCompleted_WithClosingDate() {
     testSurveyDto.setStatus(SurveyStatus.CLOSED);
-    testSurveyDto.setClosingDate(LocalDateTime.now());
+    testSurveyDto.setClosingDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any(Map.class));
 

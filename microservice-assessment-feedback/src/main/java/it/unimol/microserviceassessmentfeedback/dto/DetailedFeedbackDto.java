@@ -85,10 +85,9 @@ public class DetailedFeedbackDto {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof DetailedFeedbackDto that)) {
       return false;
     }
-    DetailedFeedbackDto that = (DetailedFeedbackDto) o;
     return Objects.equals(id, that.id)
         && Objects.equals(assessmentId, that.assessmentId)
         && Objects.equals(feedbackText, that.feedbackText)

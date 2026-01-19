@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Profile;
 public class TestRabbitConfig {
 
   /**
-   * Mock del ConnectionFactory per i test
+   * Mock del ConnectionFactory per i test.
    *
-   * @Primary assicura che questo bean abbia priorità su altri
+   * L'annotazione {@code @Primary} assicura che questo bean abbia priorità su altri.
    */
   @Bean
   @Primary
@@ -28,9 +28,9 @@ public class TestRabbitConfig {
   }
 
   /**
-   * Mock del RabbitTemplate per i test
+   * Mock del RabbitTemplate per i test.
    *
-   * @Primary assicura che questo bean abbia priorità su altri
+   * L'annotazione {@code @Primary} assicura che questo bean abbia priorità su altri.
    */
   @Bean
   @Primary

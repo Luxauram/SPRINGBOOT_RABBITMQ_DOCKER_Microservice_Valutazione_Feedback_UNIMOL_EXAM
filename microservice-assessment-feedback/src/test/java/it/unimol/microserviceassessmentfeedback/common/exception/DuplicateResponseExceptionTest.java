@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,12 +37,6 @@ class DuplicateResponseExceptionTest {
     });
   }
 
-  @Test
-  void testExceptionIsRuntimeException() {
-    DuplicateResponseException exception = new DuplicateResponseException("test");
-
-    assertTrue(exception instanceof RuntimeException);
-  }
 
   @Test
   void testExceptionWithNullMessage() {
@@ -84,12 +79,6 @@ class ResourceNotFoundExceptionTest {
     });
   }
 
-  @Test
-  void testExceptionIsRuntimeException() {
-    ResourceNotFoundException exception = new ResourceNotFoundException("test");
-
-    assertTrue(exception instanceof RuntimeException);
-  }
 
   @Test
   void testExceptionWithNullMessage() {
@@ -133,12 +122,6 @@ class SurveyClosedExceptionTest {
     });
   }
 
-  @Test
-  void testExceptionIsRuntimeException() {
-    SurveyClosedException exception = new SurveyClosedException("test");
-
-    assertTrue(exception instanceof RuntimeException);
-  }
 
   @Test
   void testExceptionWithNullMessage() {
@@ -182,12 +165,6 @@ class UnauthorizedAccessExceptionTest {
     });
   }
 
-  @Test
-  void testExceptionIsRuntimeException() {
-    UnauthorizedAccessException exception = new UnauthorizedAccessException("test");
-
-    assertTrue(exception instanceof RuntimeException);
-  }
 
   @Test
   void testExceptionWithNullMessage() {
@@ -226,7 +203,7 @@ class ErrorResponseTest {
 
   @Test
   void testConstructorWithAllParameters() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     int status = 404;
     String error = "Not Found";
     String message = "Risorsa non trovata";
@@ -278,7 +255,7 @@ class ErrorResponseTest {
 
   @Test
   void testEquals_DifferentStatus() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     ErrorResponse response1 = new ErrorResponse(timestamp, 404, "Not Found", "Test", "/api/test");
     ErrorResponse response2 = new ErrorResponse(timestamp, 500, "Not Found", "Test", "/api/test");
 
@@ -287,7 +264,7 @@ class ErrorResponseTest {
 
   @Test
   void testEquals_DifferentError() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     ErrorResponse response1 = new ErrorResponse(timestamp, 404, "Not Found", "Test", "/api/test");
     ErrorResponse response2 = new ErrorResponse(timestamp, 404, "Bad Request", "Test", "/api/test");
 
@@ -296,7 +273,7 @@ class ErrorResponseTest {
 
   @Test
   void testEquals_DifferentMessage() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     ErrorResponse response1 = new ErrorResponse(timestamp, 404, "Not Found", "Message1", "/api/test");
     ErrorResponse response2 = new ErrorResponse(timestamp, 404, "Not Found", "Message2", "/api/test");
 
@@ -305,7 +282,7 @@ class ErrorResponseTest {
 
   @Test
   void testEquals_DifferentPath() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     ErrorResponse response1 = new ErrorResponse(timestamp, 404, "Not Found", "Test", "/api/test1");
     ErrorResponse response2 = new ErrorResponse(timestamp, 404, "Not Found", "Test", "/api/test2");
 
@@ -347,7 +324,7 @@ class ErrorResponseTest {
 
   @Test
   void testEquals_OneNullTimestamp() {
-    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
     ErrorResponse response1 = new ErrorResponse(timestamp, 404, "Error", "Message", "/path");
     ErrorResponse response2 = new ErrorResponse(null, 404, "Error", "Message", "/path");
 
@@ -366,8 +343,8 @@ class ErrorResponseTest {
 
   @Test
   void testHashCode_DifferentObjects() {
-    ErrorResponse response1 = new ErrorResponse(LocalDateTime.now(), 404, "Not Found", "Test1", "/api/test");
-    ErrorResponse response2 = new ErrorResponse(LocalDateTime.now(), 500, "Error", "Test2", "/api/other");
+    ErrorResponse response1 = new ErrorResponse(LocalDateTime.now(ZoneId.systemDefault()), 404, "Not Found", "Test1", "/api/test");
+    ErrorResponse response2 = new ErrorResponse(LocalDateTime.now(ZoneId.systemDefault()), 500, "Error", "Test2", "/api/other");
 
     // Non è garantito che siano diversi, ma molto probabilmente lo saranno
     assertNotEquals(response1.hashCode(), response2.hashCode());
@@ -411,7 +388,7 @@ class ErrorResponseTest {
   @Test
   void testToString_ContainsAllFields() {
     ErrorResponse errorResponse = new ErrorResponse(
-        LocalDateTime.now(),
+        LocalDateTime.now(ZoneId.systemDefault()),
         500,
         "Internal Server Error",
         "Test message",

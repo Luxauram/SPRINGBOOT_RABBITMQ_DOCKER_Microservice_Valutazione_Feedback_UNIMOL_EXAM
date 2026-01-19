@@ -17,6 +17,7 @@ import it.unimol.microserviceassessmentfeedback.model.TeacherSurvey;
 import it.unimol.microserviceassessmentfeedback.service.SurveyResponseService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ class SurveyResponseControllerTest {
     testResponseDto.setQuestionId("q1");
     testResponseDto.setNumericRating(4);
     testResponseDto.setTextComment("Good course");
-    testResponseDto.setSubmissionDate(LocalDateTime.now());
+    testResponseDto.setSubmissionDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     ReflectionTestUtils.setField(surveyResponseController, "jwtRequestHelper", jwtRequestHelper);
   }

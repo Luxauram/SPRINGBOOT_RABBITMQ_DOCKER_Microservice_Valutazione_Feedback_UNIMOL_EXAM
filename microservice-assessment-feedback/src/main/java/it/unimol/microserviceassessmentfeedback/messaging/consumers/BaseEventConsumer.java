@@ -31,11 +31,11 @@ public abstract class BaseEventConsumer {
 
   protected Integer getIntegerValue(Map<String, Object> message, String key) {
     Object value = message.get(key);
-    if (value instanceof Integer) {
-      return (Integer) value;
-    } else if (value instanceof String) {
+    if (value instanceof Integer i) {
+      return i;
+    } else if (value instanceof String s) {
       try {
-        return Integer.valueOf((String) value);
+        return Integer.valueOf(s);
       } catch (NumberFormatException e) {
         logger.warn("Cannot parse {} as Integer: {}", key, value);
         return null;
@@ -46,13 +46,13 @@ public abstract class BaseEventConsumer {
 
   protected Long getLongValue(Map<String, Object> message, String key) {
     Object value = message.get(key);
-    if (value instanceof Long) {
-      return (Long) value;
-    } else if (value instanceof Integer) {
-      return ((Integer) value).longValue();
-    } else if (value instanceof String) {
+    if (value instanceof Long l) {
+      return l;
+    } else if (value instanceof Integer i) {
+      return i.longValue();
+    } else if (value instanceof String s) {
       try {
-        return Long.valueOf((String) value);
+        return Long.valueOf(s);
       } catch (NumberFormatException e) {
         logger.warn("Cannot parse {} as Long: {}", key, value);
         return null;
@@ -63,10 +63,10 @@ public abstract class BaseEventConsumer {
 
   protected Boolean getBooleanValue(Map<String, Object> message, String key) {
     Object value = message.get(key);
-    if (value instanceof Boolean) {
-      return (Boolean) value;
-    } else if (value instanceof String) {
-      return Boolean.valueOf((String) value);
+    if (value instanceof Boolean b) {
+      return b;
+    } else if (value instanceof String s) {
+      return Boolean.valueOf(s);
     }
     return null;
   }

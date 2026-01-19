@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
@@ -58,7 +59,7 @@ public class JwtValidationService {
    * @return true se il token è scaduto, false altrimenti
    */
   public boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+    return extractExpiration(token).toInstant().isBefore(Instant.now());
   }
 
   /**
@@ -67,6 +68,7 @@ public class JwtValidationService {
    * @param token il token JWT da validare
    * @return true se il token è valido, false altrimenti
    */
+  @SuppressWarnings("unused")
   public boolean isTokenValid(String token) {
     try {
       Claims claims = extractAllClaims(token);

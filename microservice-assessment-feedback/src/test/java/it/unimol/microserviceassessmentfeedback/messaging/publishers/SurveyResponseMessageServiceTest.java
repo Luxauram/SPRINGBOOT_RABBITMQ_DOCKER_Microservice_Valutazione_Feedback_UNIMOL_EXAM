@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 
 import it.unimol.microserviceassessmentfeedback.dto.SurveyResponseDto;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ class SurveyResponseMessageServiceTest {
     testResponseDto.setQuestionId("q1");
     testResponseDto.setNumericRating(4);
     testResponseDto.setTextComment("Good course");
-    testResponseDto.setSubmissionDate(LocalDateTime.now());
+    testResponseDto.setSubmissionDate(LocalDateTime.now(ZoneId.systemDefault()));
   }
 
   @Test
@@ -70,7 +71,7 @@ class SurveyResponseMessageServiceTest {
     response2.setQuestionId("q2");
     response2.setNumericRating(5);
     response2.setTextComment("Excellent");
-    response2.setSubmissionDate(LocalDateTime.now());
+    response2.setSubmissionDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     List<SurveyResponseDto> responses = Arrays.asList(testResponseDto, response2);
 

@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import it.unimol.microserviceassessmentfeedback.dto.AssessmentDto;
 import it.unimol.microserviceassessmentfeedback.enums.ReferenceType;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class AssessmentMessageServiceTest {
     testAssessmentDto.setReferenceType(ReferenceType.ASSIGNMENT);
     testAssessmentDto.setScore(85.0);
     testAssessmentDto.setNotes("Good work");
-    testAssessmentDto.setAssessmentDate(LocalDateTime.now());
+    testAssessmentDto.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
   }
 
   @Test

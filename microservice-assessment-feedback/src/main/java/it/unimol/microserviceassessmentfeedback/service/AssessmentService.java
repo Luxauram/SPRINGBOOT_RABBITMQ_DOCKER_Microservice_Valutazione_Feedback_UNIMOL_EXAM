@@ -8,6 +8,7 @@ import it.unimol.microserviceassessmentfeedback.messaging.publishers.AssessmentM
 import it.unimol.microserviceassessmentfeedback.model.Assessment;
 import it.unimol.microserviceassessmentfeedback.repository.AssessmentRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -222,7 +223,7 @@ public class AssessmentService {
     validateAssessmentData(assessmentDto);
 
     Assessment assessment = convertToEntity(assessmentDto);
-    assessment.setAssessmentDate(LocalDateTime.now());
+    assessment.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     Assessment savedAssessment = assessmentRepository.save(assessment);
     logger.info("Valutazione creata con successo con ID: {}", savedAssessment.getId());
@@ -359,7 +360,9 @@ public class AssessmentService {
     assessment.setTeacherId(dto.getTeacherId());
     assessment.setScore(dto.getScore());
     assessment.setAssessmentDate(
-        dto.getAssessmentDate() != null ? dto.getAssessmentDate() : LocalDateTime.now());
+        dto.getAssessmentDate() != null
+            ? dto.getAssessmentDate()
+            : LocalDateTime.now(ZoneId.systemDefault()));
     assessment.setNotes(dto.getNotes());
     assessment.setCourseId(dto.getCourseId());
     return assessment;

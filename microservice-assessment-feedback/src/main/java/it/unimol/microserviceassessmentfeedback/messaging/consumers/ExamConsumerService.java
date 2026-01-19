@@ -6,6 +6,7 @@ import it.unimol.microserviceassessmentfeedback.service.AssessmentService;
 import it.unimol.microserviceassessmentfeedback.service.events.NotificationService;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +157,7 @@ public class ExamConsumerService extends BaseEventConsumer {
       assessment.setAssessmentDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(completionTime),
           java.time.ZoneId.systemDefault()));
     } else {
-      assessment.setAssessmentDate(LocalDateTime.now());
+      assessment.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     // Note iniziali con informazioni sull'esame
@@ -226,7 +227,7 @@ public class ExamConsumerService extends BaseEventConsumer {
       assessment.setAssessmentDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(gradeDate),
           java.time.ZoneId.systemDefault()));
     } else {
-      assessment.setAssessmentDate(LocalDateTime.now());
+      assessment.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     // Note complete con voto e feedback
@@ -260,13 +261,14 @@ public class ExamConsumerService extends BaseEventConsumer {
     logger.info(
         "📊 EXAM STATS UPDATE - Course: {} | Type: {} | Student: {} | Duration: {} min | "
             + "Timestamp: {}",
-        courseId, examType, studentId, duration, LocalDateTime.now());
+        courseId, examType, studentId, duration, LocalDateTime.now(ZoneId.systemDefault()));
 
     // Simula aggiornamento statistiche
     logger.info("📈 Updated course completion rate for: {}", courseId);
     logger.info("📈 Updated average exam duration for type: {}", examType);
   }
 
+  @SuppressWarnings("UnusedVariable")
   private void handleSpecialGradeCases(String studentId, String teacherId, String examId,
       Integer score, Integer maxScore, String grade) {
     if (score != null && maxScore != null) {

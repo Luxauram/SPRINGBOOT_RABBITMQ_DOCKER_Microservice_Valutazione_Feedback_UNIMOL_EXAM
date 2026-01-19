@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,7 @@ class GlobalExceptionHandlerTest {
     assertEquals(errorMessage, errorResponse.getMessage());
     assertEquals(TEST_URI, errorResponse.getPath());
     assertNotNull(errorResponse.getTimestamp());
-    assertTrue(errorResponse.getTimestamp().isBefore(LocalDateTime.now().plusSeconds(1)));
+    assertTrue(errorResponse.getTimestamp().isBefore(LocalDateTime.now(ZoneId.systemDefault()).plusSeconds(1)));
   }
 
   @Test
@@ -289,7 +290,7 @@ class GlobalExceptionHandlerTest {
   @Test
   void testTimestampIsRecent() throws InterruptedException {
     when(request.getRequestURI()).thenReturn(TEST_URI);
-    LocalDateTime before = LocalDateTime.now();
+    LocalDateTime before = LocalDateTime.now(ZoneId.systemDefault());
     Thread.sleep(10); // Breve pausa per garantire differenza temporale
 
     ResourceNotFoundException exception = new ResourceNotFoundException("Test");
@@ -297,7 +298,7 @@ class GlobalExceptionHandlerTest {
         exceptionHandler.handleResourceNotFoundException(exception, request);
 
     Thread.sleep(10);
-    LocalDateTime after = LocalDateTime.now();
+    LocalDateTime after = LocalDateTime.now(ZoneId.systemDefault());
 
     LocalDateTime timestamp = response.getBody().getTimestamp();
     assertTrue(timestamp.isAfter(before) || timestamp.isEqual(before));

@@ -19,6 +19,7 @@ import it.unimol.microserviceassessmentfeedback.messaging.publishers.AssessmentM
 import it.unimol.microserviceassessmentfeedback.model.Assessment;
 import it.unimol.microserviceassessmentfeedback.repository.AssessmentRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ class AssessmentServiceTest {
     testAssessment.setReferenceType(ReferenceType.ASSIGNMENT);
     testAssessment.setScore(85.0);
     testAssessment.setNotes("Good work");
-    testAssessment.setAssessmentDate(LocalDateTime.now());
+    testAssessment.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     testAssessmentDto = new AssessmentDto();
     testAssessmentDto.setId("assessment1");

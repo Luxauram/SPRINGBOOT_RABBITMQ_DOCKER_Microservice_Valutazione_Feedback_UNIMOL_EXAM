@@ -24,6 +24,7 @@ import it.unimol.microserviceassessmentfeedback.model.TeacherSurvey;
 import it.unimol.microserviceassessmentfeedback.repository.SurveyResponseRepository;
 import it.unimol.microserviceassessmentfeedback.repository.TeacherSurveyRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ class SurveyResponseServiceTest {
     testResponse.setQuestionId("q1");
     testResponse.setNumericRating(4);
     testResponse.setTextComment("Good course");
-    testResponse.setSubmissionDate(LocalDateTime.now());
+    testResponse.setSubmissionDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     testResponseDto = new SurveyResponseDto();
     testResponseDto.setId("response1");

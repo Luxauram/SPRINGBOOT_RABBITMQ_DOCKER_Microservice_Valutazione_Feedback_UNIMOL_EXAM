@@ -17,6 +17,7 @@ import it.unimol.microserviceassessmentfeedback.enums.ReferenceType;
 import it.unimol.microserviceassessmentfeedback.service.AssessmentService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ class AssessmentControllerTest {
     testAssessmentDto.setReferenceType(ReferenceType.ASSIGNMENT);
     testAssessmentDto.setScore(85.0);
     testAssessmentDto.setNotes("Good work");
-    testAssessmentDto.setAssessmentDate(LocalDateTime.now());
+    testAssessmentDto.setAssessmentDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     ReflectionTestUtils.setField(assessmentController, "jwtRequestHelper", jwtRequestHelper);
   }

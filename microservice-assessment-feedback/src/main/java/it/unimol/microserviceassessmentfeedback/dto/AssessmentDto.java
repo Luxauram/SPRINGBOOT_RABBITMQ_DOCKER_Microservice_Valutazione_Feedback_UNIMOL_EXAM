@@ -119,10 +119,9 @@ public class AssessmentDto {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof AssessmentDto that)) {
       return false;
     }
-    AssessmentDto that = (AssessmentDto) o;
     return Objects.equals(id, that.id)
         && Objects.equals(referenceId, that.referenceId)
         && referenceType == that.referenceType

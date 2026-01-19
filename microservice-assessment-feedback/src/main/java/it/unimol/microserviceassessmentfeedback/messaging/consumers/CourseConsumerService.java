@@ -49,6 +49,7 @@ public class CourseConsumerService extends BaseEventConsumer {
     processMessage(message, "COURSE_DELETED");
   }
 
+  @SuppressWarnings("UnusedVariable")
   private void processCourseCreated(Map<String, Object> message) {
     String courseId = getStringValue(message, "courseId");
     String courseName = getStringValue(message, "courseName");
@@ -86,6 +87,7 @@ public class CourseConsumerService extends BaseEventConsumer {
     }
   }
 
+  @SuppressWarnings("UnusedVariable")
   private void processCourseDeleted(Map<String, Object> message) {
     String courseId = getStringValue(message, "courseId");
     String courseName = getStringValue(message, "courseName");

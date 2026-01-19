@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@SuppressWarnings({"JavaUtilDate", "UnusedVariable"})
 class JwtValidationServiceTest {
 
   private JwtValidationService jwtValidationService;

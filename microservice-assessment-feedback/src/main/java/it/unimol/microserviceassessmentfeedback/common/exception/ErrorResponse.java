@@ -47,11 +47,9 @@ public class ErrorResponse {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof ErrorResponse that)) {
       return false;
     }
-
-    ErrorResponse that = (ErrorResponse) o;
 
     if (status != that.status) {
       return false;

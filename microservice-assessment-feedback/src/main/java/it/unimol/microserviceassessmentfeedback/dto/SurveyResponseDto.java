@@ -84,10 +84,9 @@ public class SurveyResponseDto {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof SurveyResponseDto that)) {
       return false;
     }
-    SurveyResponseDto that = (SurveyResponseDto) o;
     return Objects.equals(id, that.id)
         && Objects.equals(surveyId, that.surveyId)
         && Objects.equals(studentId, that.studentId)

@@ -10,6 +10,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -102,10 +103,9 @@ public class Assessment {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof Assessment that)) {
       return false;
     }
-    Assessment that = (Assessment) o;
     return Objects.equals(id, that.id)
         && Objects.equals(referenceId, that.referenceId)
         && referenceType == that.referenceType
@@ -252,8 +252,8 @@ public class Assessment {
     if (id == null || id.isEmpty()) {
       id = UUID.randomUUID().toString();
     }
-    createdAt = LocalDateTime.now();
-    updatedAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now(ZoneId.systemDefault());
+    updatedAt = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   /**
@@ -262,7 +262,7 @@ public class Assessment {
    */
   @PreUpdate
   protected void onUpdate() {
-    updatedAt = LocalDateTime.now();
+    updatedAt = LocalDateTime.now(ZoneId.systemDefault());
   }
 
   /**

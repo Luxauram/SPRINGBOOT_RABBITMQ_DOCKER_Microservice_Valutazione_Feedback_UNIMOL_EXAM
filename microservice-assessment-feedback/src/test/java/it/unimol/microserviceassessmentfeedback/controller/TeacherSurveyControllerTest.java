@@ -17,6 +17,7 @@ import it.unimol.microserviceassessmentfeedback.enums.SurveyStatus;
 import it.unimol.microserviceassessmentfeedback.service.TeacherSurveyService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +70,7 @@ class TeacherSurveyControllerTest {
         .title("Course Evaluation")
         .description("Survey description")
         .questions(Arrays.asList(testQuestion))
-        .creationDate(LocalDateTime.now())
+        .creationDate(LocalDateTime.now(ZoneId.systemDefault()))
         .build();
 
     ReflectionTestUtils.setField(surveyController, "jwtRequestHelper", jwtRequestHelper);

@@ -1,7 +1,9 @@
 package it.unimol.microserviceassessmentfeedback.service.events;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -154,20 +156,14 @@ public class NotificationService {
    * Formatta il tipo di aggiornamento in modo user-friendly.
    */
   private String formatUpdateType(String updateType) {
-    switch (updateType) {
-      case "DUE_DATE_CHANGED":
-        return "Scadenza modificata";
-      case "MAX_SCORE_CHANGED":
-        return "Punteggio massimo modificato";
-      case "REQUIREMENTS_CHANGED":
-        return "Requisiti aggiornati";
-      case "DESCRIPTION_UPDATED":
-        return "Descrizione aggiornata";
-      case "CRITERIA_UPDATED":
-        return "Criteri di valutazione aggiornati";
-      default:
-        return updateType.replace("_", " ").toLowerCase();
-    }
+    return switch (updateType) {
+      case "DUE_DATE_CHANGED" -> "Scadenza modificata";
+      case "MAX_SCORE_CHANGED" -> "Punteggio massimo modificato";
+      case "REQUIREMENTS_CHANGED" -> "Requisiti aggiornati";
+      case "DESCRIPTION_UPDATED" -> "Descrizione aggiornata";
+      case "CRITERIA_UPDATED" -> "Criteri di valutazione aggiornati";
+      default -> updateType.replace("_", " ").toLowerCase(Locale.ROOT);
+    };
   }
 
   // ===================================================================
@@ -235,7 +231,7 @@ public class NotificationService {
   // ===================================================================
 
   private String getCurrentTimestamp() {
-    return LocalDateTime.now().format(TIMESTAMP_FORMAT);
+    return LocalDateTime.now(ZoneId.systemDefault()).format(TIMESTAMP_FORMAT);
   }
 
   /**

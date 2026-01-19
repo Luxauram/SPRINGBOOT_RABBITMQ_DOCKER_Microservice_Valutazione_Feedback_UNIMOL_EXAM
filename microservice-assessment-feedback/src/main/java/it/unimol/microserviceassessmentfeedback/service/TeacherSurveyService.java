@@ -9,6 +9,7 @@ import it.unimol.microserviceassessmentfeedback.messaging.publishers.TeacherSurv
 import it.unimol.microserviceassessmentfeedback.model.TeacherSurvey;
 import it.unimol.microserviceassessmentfeedback.repository.TeacherSurveyRepository;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -120,6 +121,7 @@ public class TeacherSurveyService {
    * @param surveyId identificativo del questionario
    * @return oggetto contenente statistiche del questionario
    */
+  @SuppressWarnings("unused")
   public Object getSurveyStatistics(String surveyId) {
     logger.info("Richiesta statistiche per questionario: {}", surveyId);
     String requestedBy = getCurrentUser();
@@ -144,6 +146,7 @@ public class TeacherSurveyService {
    *
    * @return oggetto contenente statistiche aggregate
    */
+  @SuppressWarnings("unused")
   public Object getGeneralStatistics() {
     logger.info("Richiesta statistiche generali questionari");
 
@@ -152,7 +155,7 @@ public class TeacherSurveyService {
       public final long draftSurveys = surveyRepository.countByStatus(SurveyStatus.DRAFT);
       public final long activeSurveys = surveyRepository.countByStatus(SurveyStatus.ACTIVE);
       public final long closedSurveys = surveyRepository.countByStatus(SurveyStatus.CLOSED);
-      public final String generatedAt = LocalDateTime.now().toString();
+      public final String generatedAt = LocalDateTime.now(ZoneId.systemDefault()).toString();
     };
   }
 
@@ -213,7 +216,7 @@ public class TeacherSurveyService {
 
     TeacherSurvey survey = convertToEntity(surveyDto);
     survey.setStatus(SurveyStatus.DRAFT);
-    survey.setCreationDate(LocalDateTime.now());
+    survey.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
 
     TeacherSurvey savedSurvey = surveyRepository.save(survey);
     TeacherSurveyDto result = convertToDto(savedSurvey);
@@ -290,7 +293,7 @@ public class TeacherSurveyService {
     survey.setStatus(newStatus);
 
     if (newStatus == SurveyStatus.CLOSED) {
-      survey.setClosingDate(LocalDateTime.now());
+      survey.setClosingDate(LocalDateTime.now(ZoneId.systemDefault()));
     } else if (newStatus == SurveyStatus.ACTIVE && survey.getClosingDate() != null) {
       survey.setClosingDate(null);
     }
@@ -317,6 +320,7 @@ public class TeacherSurveyService {
    * @param id identificativo del questionario
    */
   @Transactional
+  @SuppressWarnings("unused")
   public void deleteSurvey(String id) {
     logger.info("Eliminazione questionario con id: {}", id);
 
@@ -383,7 +387,9 @@ public class TeacherSurveyService {
     survey.setSemester(dto.getSemester());
     survey.setStatus(dto.getStatus() != null ? dto.getStatus() : SurveyStatus.DRAFT);
     survey.setCreationDate(
-        dto.getCreationDate() != null ? dto.getCreationDate() : LocalDateTime.now());
+        dto.getCreationDate() != null
+            ? dto.getCreationDate()
+            : LocalDateTime.now(ZoneId.systemDefault()));
     survey.setClosingDate(dto.getClosingDate());
     survey.setTitle(dto.getTitle());
     survey.setDescription(dto.getDescription());
