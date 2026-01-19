@@ -37,41 +37,49 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      # ========== BUILD ==========
+      # ========== BUILD (Base Build & Install) ==========
+      # Installa le dipendenze e compila il progetto base
       - name: Build with Maven
-        run: mvn clean install -DskipTests
+        run: mvn clean install -DskipTests -B
 
       # ========== TESTS ==========
+      # Esegue i test unitari e genera i report XML tramite Surefire
       - name: Run Unit Tests
-        run: mvn test -e -X
+        run: mvn test -B
         continue-on-error: true
 
       # ========== CHECKSTYLE (Linting) ==========
+      # Verifica la conformità agli standard di codice
       - name: Run Checkstyle
-        run: mvn checkstyle:check
+        run: mvn checkstyle:check -B
         continue-on-error: true
 
       # ========== ERROR PRONE (Static Analysis) ==========
+      # Analisi statica del codice senza cancellare i report generati
       - name: Run Error Prone Analysis
-        run: mvn clean compile -e
+        run: mvn compile -B
         continue-on-error: true
 
       # ========== JACOCO (Code Coverage) ==========
+      # Genera il report di copertura del codice
       - name: Generate JaCoCo Coverage Report
-        run: mvn jacoco:report
+        run: mvn jacoco:report -B
 
+      # Verifica che la copertura rispetti le soglie minime
       - name: Check Code Coverage
-        run: mvn jacoco:check
+        run: mvn jacoco:check -B
         continue-on-error: true
 
       # ========== UPLOAD REPORTS ==========
+      # Carica i risultati dei test (Surefire) come artifact
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: '**/target/surefire-reports/'
+          path: '**/target/surefire-reports/*.xml'
 
+      # Carica il report di copertura (JaCoCo) come artifact
       - name: Upload Coverage Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -79,6 +87,7 @@ jobs:
           name: coverage-report
           path: '**/target/site/jacoco/'
 
+      # Carica il report di stile (Checkstyle) come artifact
       - name: Upload Checkstyle Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -87,6 +96,7 @@ jobs:
           path: '**/target/checkstyle-result.xml'
 
       # ========== SUMMARY ==========
+      # Pubblica un sommario visuale dei risultati dei test su GitHub
       - name: Publish Test Summary
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
@@ -102,6 +112,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Crea file .env con variabili d'ambiente per la CI
       - name: Create .env file for CI
         run: |
           cat << EOF > .env
@@ -117,12 +128,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Build delle immagini Docker definite nel docker-compose
       - name: Build Docker Images
         run: docker compose build
 
+      # Valida la configurazione del docker-compose
       - name: Validate Docker Compose
         run: docker compose config
 
+      # Test di avvio dei container per verificare che siano funzionanti
       - name: Test Docker Images Start
         run: |
           docker compose up -d
