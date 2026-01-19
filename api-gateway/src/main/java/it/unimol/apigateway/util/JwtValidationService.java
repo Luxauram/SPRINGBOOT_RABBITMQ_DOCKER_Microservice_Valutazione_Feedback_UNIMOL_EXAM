@@ -21,16 +21,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtValidationService {
 
+  @SuppressWarnings("UnusedVariable")
   @Value("${jwt.private-key}")
   private String privateKeyString;
 
-  @Value("${jwt.public-key}")
-  private String publicKeyString;
-
+  @SuppressWarnings("UnusedVariable")
   @Value("${jwt.expiration}")
   private Long jwtExpiration;
 
+  @SuppressWarnings("UnusedVariable")
   private PrivateKey privateKey;
+
+  @Value("${jwt.public-key}")
+  private String publicKeyString;
   private PublicKey publicKey;
 
   /**
@@ -139,6 +142,7 @@ public class JwtValidationService {
    * @param token Il token JWT da verificare.
    * @return true se il token è scaduto, false altrimenti.
    */
+  @SuppressWarnings("JavaUtilDate")
   public boolean isTokenExpired(String token) {
     try {
       return extractExpiration(token).before(new Date());
@@ -158,7 +162,8 @@ public class JwtValidationService {
    */
   public boolean isTokenValid(String token) {
     try {
-      Claims claims = extractAllClaims(token);
+      /*Claims claims = extractAllClaims(token);*/
+      extractAllClaims(token);
 
       return !isTokenExpired(token);
     } catch (Exception e) {

@@ -56,6 +56,7 @@ class JwtValidationServiceTest {
   /**
    * Metodo helper per generare un token JWT valido
    */
+  @SuppressWarnings("JavaUtilDate")
   private String generateValidToken(String userId, String username, String role,
       Long expirationMs) {
     return Jwts.builder()
@@ -156,6 +157,7 @@ class JwtValidationServiceTest {
   // ========== Test extractExpiration e isTokenExpired ==========
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractExpiration_ValidToken() {
     String token = generateValidToken("user123", "testuser", "ROLE_STUDENT");
     Date expiration = jwtValidationService.extractExpiration(token);
@@ -171,6 +173,7 @@ class JwtValidationServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testIsTokenExpired_Expired() {
     // Crea un token con scadenza esplicita nel passato
     String token = Jwts.builder()
@@ -258,6 +261,7 @@ class JwtValidationServiceTest {
   // ========== Test extractStudentId ==========
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractStudentId_WithStudentIdClaim() {
     String token = Jwts.builder()
         .setSubject("user123")
@@ -281,6 +285,7 @@ class JwtValidationServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractStudentId_WithRoleStudentAndUserId() {
     String token = Jwts.builder()
         .setSubject("")
@@ -315,6 +320,7 @@ class JwtValidationServiceTest {
   // ========== Test extractTeacherId ==========
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractTeacherId_WithTeacherIdClaim() {
     String token = Jwts.builder()
         .setSubject("user123")
@@ -338,6 +344,7 @@ class JwtValidationServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractTeacherId_WithRoleTeacherAndUserId() {
     String token = Jwts.builder()
         .setSubject("")
@@ -433,6 +440,7 @@ class JwtValidationServiceTest {
   // ========== Test extractAllClaims (coverage indiretto) ==========
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractAllClaims_JwtException() {
     // Token firmato con una chiave diversa
     try {
@@ -458,6 +466,7 @@ class JwtValidationServiceTest {
   }
 
   @Test
+  @SuppressWarnings("JavaUtilDate")
   void testExtractClaim_CustomClaim() {
     String token = Jwts.builder()
         .setSubject("user123")
