@@ -34,15 +34,6 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
 
-      <!-- PMD - DISABILITATO (problemi con Java 24) -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
       <!-- JaCoCo -->
       <plugin>
         <groupId>org.jacoco</groupId>

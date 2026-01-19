@@ -51,7 +51,10 @@ jobs:
         run: mvn checkstyle:check
         continue-on-error: true
 
-      # ========== ERROR PRUNE (To Do) ==========
+      # ========== ERROR PRONE (Static Analysis) ==========
+      - name: Run Error Prone Analysis
+        run: mvn clean compile -e
+        continue-on-error: true
 
       # ========== JACOCO (Code Coverage) ==========
       - name: Generate JaCoCo Coverage Report
@@ -82,13 +85,6 @@ jobs:
         with:
           name: checkstyle-report
           path: '**/target/checkstyle-result.xml'
-
-      - name: Upload SpotBugs Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: spotbugs-report
-          path: '**/target/spotbugsXml.xml'
 
       # ========== SUMMARY ==========
       - name: Publish Test Summary
