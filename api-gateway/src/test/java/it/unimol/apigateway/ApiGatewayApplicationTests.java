@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
         "eureka.client.enabled=false",
         "spring.cloud.discovery.enabled=false",
         "spring.rabbitmq.host=localhost",
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration"  // ← AGGIUNGI QUESTO
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration"
     }
 )
 @ActiveProfiles("test")

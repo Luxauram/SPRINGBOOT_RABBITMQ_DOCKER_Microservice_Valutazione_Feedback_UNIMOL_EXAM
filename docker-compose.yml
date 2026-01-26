@@ -143,6 +143,9 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_ERLANG_COOKIE: "my-secret-rabbitmq-cookie-12345"
+    volumes:
+        - rabbitmq_data:/var/lib/rabbitmq
     deploy:
       replicas: 1
       restart_policy:
@@ -207,3 +210,4 @@ networks:
 volumes:
   postgres_users_data:
   postgres_assessments_data:
+  rabbitmq_data:
