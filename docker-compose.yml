@@ -2,6 +2,9 @@ services:
   # Api-Gateway
   api-gateway:
     image: unimol/api-gateway:latest
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
     environment:
       SPRING_PROFILES_ACTIVE: docker
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
@@ -28,6 +31,9 @@ services:
   # Microservizio: User Role Service
   microservice-user-role:
     image: unimol/microservice-user-role:latest
+    build:
+      context: .
+      dockerfile: microservice-user-role/Dockerfile
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-users:5432/${DB_PG_NAME_UR:-utenti_db}
@@ -66,6 +72,9 @@ services:
   # Microservizio: Assessment Feedback Service
   microservice-assessment-feedback:
     image: unimol/microservice-assessment-feedback:latest
+    build:
+      context: .
+      dockerfile: microservice-assessment-feedback/Dockerfile
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-assessment:5432/${DB_PG_NAME_AF:-assessment_feedback_db}
