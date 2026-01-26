@@ -1,9 +1,7 @@
 services:
   # Api-Gateway
   api-gateway:
-    build:
-      context: .
-      dockerfile: api-gateway/Dockerfile
+    image: unimol/api-gateway:latest
     environment:
       SPRING_PROFILES_ACTIVE: docker
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
@@ -19,31 +17,27 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-    expose:
-      - 8080
+    ports:
+      - "8080:8080"
     depends_on:
-      microservice-user-role:
-        condition: service_started
-      microservice-assessment-feedback:
-        condition: service_started
+      - microservice-user-role
+      - microservice-assessment-feedback
     networks:
       - unimol-network
 
   # Microservizio: User Role Service
   microservice-user-role:
-    build:
-      context: .
-      dockerfile: microservice-user-role/Dockerfile
+    image: unimol/microservice-user-role:latest
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-users:5432/${DB_PG_NAME_UR:-utenti_db}
       SPRING_DATASOURCE_USERNAME: ${DB_PG_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${DB_PG_PASSWORD:-password}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${DATA_SOURCE_DRIVER_CLASS_NAME:-org.postgresql.Driver}
-      SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST_DOCKER}
-      SPRING_RABBITMQ_PORT: ${RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
-      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       RABBITMQ_EXCHANGE_USERS: ${RABBITMQ_EXCHANGE_USERS:-unimol.exchange}
       RABBITMQ_QUEUE_USER_CREATED: ${RABBITMQ_QUEUE_USER_CREATED:-user.created}
       RABBITMQ_QUEUE_USER_UPDATED: ${RABBITMQ_QUEUE_USER_UPDATED:-user.updated}
@@ -61,30 +55,26 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-    expose:
-      - 8081
+    ports:
+      - "8081:8081"
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      postgres-users:
-        condition: service_healthy
+      - rabbitmq
+      - postgres-users
     networks:
       - unimol-network
 
   # Microservizio: Assessment Feedback Service
   microservice-assessment-feedback:
-    build:
-      context: .
-      dockerfile: microservice-assessment-feedback/Dockerfile
+    image: unimol/microservice-assessment-feedback:latest
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-assessment:5432/${DB_PG_NAME_AF:-assessment_feedback_db}
       SPRING_DATASOURCE_USERNAME: ${DB_PG_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${DB_PG_PASSWORD:-password}
-      SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST_DOCKER}
-      SPRING_RABBITMQ_PORT: ${RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
-      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       RABBITMQ_EXCHANGE_DLX: ${RABBITMQ_EXCHANGE_DLX:-unimol.dlx}
       RABBITMQ_QUEUE_DLQ: ${RABBITMQ_QUEUE_DLQ:-unimol.dlq}
       RABBITMQ_MSG_TTL: ${RABBITMQ_MSG_TTL:-86400000}
@@ -109,12 +99,12 @@ services:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
-      APP_DATA_FAKER_ENABLED: true
+      APP_DATA_FAKER_ENABLED: "true"
       APP_DATA_FAKER_LOCALE: it
-      APP_DATA_FAKER_ASSESSMENTS_COUNT: 50
-      APP_DATA_FAKER_FEEDBACKS_COUNT: 150
-      APP_DATA_FAKER_RESET_ON_STARTUP: false
-      APP_DATA_FAKER_FORCE_RELOAD: false
+      APP_DATA_FAKER_ASSESSMENTS_COUNT: "50"
+      APP_DATA_FAKER_FEEDBACKS_COUNT: "150"
+      APP_DATA_FAKER_RESET_ON_STARTUP: "false"
+      APP_DATA_FAKER_FORCE_RELOAD: "false"
     deploy:
       replicas: 3
       restart_policy:
@@ -124,13 +114,11 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-    expose:
-      - 8082
+    ports:
+      - "8082:8082"
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      postgres-assessment:
-        condition: service_healthy
+      - rabbitmq
+      - postgres-assessment
     networks:
       - unimol-network
 
@@ -152,9 +140,10 @@ services:
         condition: on-failure
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
     networks:
       - unimol-network
 
@@ -205,7 +194,8 @@ services:
 
 networks:
   unimol-network:
-    driver: bridge
+    driver: overlay
+    attachable: true
 
 volumes:
   postgres_users_data:

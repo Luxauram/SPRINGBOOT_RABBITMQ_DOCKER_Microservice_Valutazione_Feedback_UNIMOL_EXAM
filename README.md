@@ -616,13 +616,11 @@ Copiare il contenuto e incollarlo su .env.example (ricordandosi di rinominarlo i
 prendere `this-should-not-exist.txt`, spostarlo nella root e rinominarlo `.env`.
 
 Adesso occorre aprire un terminale nella root del progetto ed eseguire:
-
 ```bash
 mvn clean install
 ```
 
 oppure se non si ha maven installato globalmente:
-
 ```bash
 # Su Linux o macOS
 ./mvnw clean install
@@ -631,119 +629,171 @@ oppure se non si ha maven installato globalmente:
 mvnw.cmd clean install
 ```
 
-### 1. Avvio del Microservizio con Docker Compose
+### 1. Prerequisiti
 
-Per far partire il microservizio (e tutti il resto contenuto nella directory) bisogna:
+Prima di avviare il progetto, assicurarsi di avere:
 
-1. **Assicurarsi che Docker sia installato.**
-2. **Assicurarsi che Docker sia in esecuzione.**
-2. **Aprire il terminale** nella root del progetto (dove si trova il file `docker-compose.yml`).
-3. **Eseguire il seguente comando**:
-   ```bash
-   docker compose up --build
-   ```
-
-Questo avvierà tutti i servizi definiti nel `docker-compose.yml` (e (ri)costruirà le immagini Docker
-se necessario).
-
----
-
-### 2. Recupero password di Spring Security [NON NECESSARIO MA POTREBBE SERVIRE]
-
-Per accedere agli endpoint Actuator del microservizio di Valutazione e Feedback, sono protetti da
-Spring Security, ci sarà
-bisogno della password generata dinamicamente da SrpingBoot, ecco come recuperarla:
-
-1. **Visualizzare i container Docker in esecuzione**:
-   Aprire nuovo terminale e digitare:
-   ```bash
-   docker compose ps
-   ```
-   Questo comando elencherà tutti i servizi e i relativi ID dei container in esecuzione.
-
-2. **Identificare l'ID (o il nome) del container del microservizio**:
-   Trova la riga relativa al tuo microservizio (es. `unimol-microservice-assessment-feedback`) e
-   annotare **`ID`** (una stringa alfanumerica) o usare direttamente il nome del container.
-
-3. **Recuperare i log del container**:
-   Utilizzare l'ID (o il nome) del container trovato:
-   ```bash
-   docker logs <ID_DEL_CONTAINER>
-   ```
-
-4. **Cercare la password nei log**:
-   Scorrendo tra il log generati si potrà scorgere qualcosa del tipo:
-   ```
-   Using generated security password: <PASSWORD_GENERATA>
-   ```
-   **Questa sarà la password** da usare con l'username **`user`** per accedere agli endpoint
-   Actuator del microservizio.
+1. **Docker** installato e in esecuzione
+2. **Make** installato sul sistema:
+    - **Linux**: Solitamente già presente, altrimenti `sudo apt-get install make` (Debian/Ubuntu) o `sudo yum install make` (Red Hat/CentOS)
+    - **macOS**: Già presente con Xcode Command Line Tools, altrimenti `xcode-select --install`
+    - **Windows**: È necessario installare Make manualmente:
+        - Opzione 1: Tramite [Chocolatey](https://chocolatey.org/) → `choco install make`
+        - Opzione 2: Tramite [Scoop](https://scoop.sh/) → `scoop install make`
+        - Opzione 3: Installare [Git for Windows](https://gitforwindows.org/) che include Make
+        - Opzione 4: Usare [WSL2](https://docs.microsoft.com/windows/wsl/) (Windows Subsystem for Linux)
 
 ---
 
-### 3. Accesso alle Interfacce Web
+### 2. Avvio del Sistema con Make
 
-Una volta che il microservizio è in esecuzione, si potrà accedere alle seguenti interfacce web:
+Il progetto utilizza un **Makefile** per semplificare la gestione dell'intera architettura. Per avviare tutto il sistema:
+
+1. **Aprire il terminale** nella root del progetto (dove si trova il `Makefile`).
+2. **Eseguire il comando**:
+```bash
+   make start
+```
+
+Questo comando eseguirà automaticamente:
+- Inizializzazione di Docker Swarm
+- Build di tutte le immagini Docker
+- Deploy dello stack completo
+- Visualizzazione dello stato dei servizi
+
+**Output atteso**: Dopo circa 15 secondi, il sistema mostrerà gli endpoint disponibili e lo stato dei servizi.
+
+---
+
+### 3. Comandi Make Disponibili
+
+Il Makefile offre diversi comandi per gestire il sistema:
+
+#### Comandi Principali
+```bash
+make start              # Avvia l'intera architettura (build + deploy)
+make stop               # Ferma tutti i servizi
+make logs               # Mostra i log di tutti i microservizi in tempo reale
+make status             # Visualizza lo stato dettagliato dei servizi
+make clean              # Rimuove tutto (incluso Swarm e volumi)
+make help               # Mostra tutti i comandi disponibili
+```
+
+#### Comandi per Log Specifici
+```bash
+make logs-gateway       # Log solo dell'API Gateway
+make logs-user          # Log solo del User Role Service
+make logs-assessment    # Log solo dell'Assessment Service
+make logs-rabbitmq      # Log solo di RabbitMQ
+make logs-postgres-users      # Log del database utenti
+make logs-postgres-assessment # Log del database valutazioni
+```
+
+#### Comandi per Scalabilità
+```bash
+make scale-gateway      # Scala il numero di repliche dell'API Gateway
+make scale-user         # Scala il numero di repliche del User Service
+make scale-assessment   # Scala il numero di repliche dell'Assessment Service
+```
+
+#### Comandi per Riavvio Servizi
+```bash
+make restart-gateway    # Riavvia l'API Gateway
+make restart-user       # Riavvia il User Role Service
+make restart-assessment # Riavvia l'Assessment Service
+```
+
+#### Comandi Avanzati
+```bash
+make build              # Esegue solo la build delle immagini (senza deploy)
+make deploy             # Esegue solo il deploy (senza rebuild)
+make swarm-init         # Inizializza Docker Swarm manualmente
+```
+
+---
+
+### 4. Accesso alle Interfacce Web
+
+Una volta che il sistema è in esecuzione (dopo `make start`), si potrà accedere alle seguenti interfacce web:
 
 * **RabbitMQ Management Console**:
     * **URL**: [http://localhost:15672](http://localhost:15672)
-    * **Descrizione**: Interfaccia di gestione per monitorare e interagire con le code di messaggi
-      di RabbitMQ.
+    * **Credenziali**: `guest` / `guest`
+    * **Descrizione**: Interfaccia di gestione per monitorare e interagire con le code di messaggi di RabbitMQ.
 
 * **Swagger UI - API-Gateway**:
-    * **URL
-      **: [http://localhost:8080/webjars/swagger-ui/index.html](http://localhost:8080/webjars/swagger-ui/index.html)
+    * **URL**: [http://localhost:8080/webjars/swagger-ui/index.html](http://localhost:8080/webjars/swagger-ui/index.html)
     * **Descrizione**: Documentazione interattiva delle API per l'api-gateway.
 
 * **Open API Docs - API-Gateway**:
-    * **URL
-      **: [http://localhost:8080/v3/api-docs](http://localhost:8080/webjars/swagger-ui/index.html)
+    * **URL**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
     * **Descrizione**: Visualizzazione JSON delle API per l'api-gateway.
 
 * **Swagger UI - Microservizio User Role**:
-    * **URL
-      **: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
-    * **Descrizione**: Documentazione interattiva delle API per il microservizio di gestione utente
-      e ruoli.
+    * **URL**: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
+    * **Descrizione**: Documentazione interattiva delle API per il microservizio di gestione utente e ruoli.
 
 * **Open API Docs - Microservizio User Role**:
-    * **URL**: [http://localhost:8081/v3/api-docs](http://localhost:8081/swagger-ui/index.html)
-    * **Descrizione**: Visualizzazione JSON delle API per il microservizio di gestione utente e
-      ruoli.
+    * **URL**: [http://localhost:8081/v3/api-docs](http://localhost:8081/v3/api-docs)
+    * **Descrizione**: Visualizzazione JSON delle API per il microservizio di gestione utente e ruoli.
 
 * **Swagger UI - Microservizio Assessment Feedback**:
-    * **URL
-      **: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html])
-    * **Descrizione**: Documentazione interattiva delle API per il microservizio di gestione
-      valutazioni e feedback.
+    * **URL**: [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
+    * **Descrizione**: Documentazione interattiva delle API per il microservizio di gestione valutazioni e feedback.
 
 * **Open API Docs - Microservizio Assessment Feedback**:
-    * **URL**: [http://localhost:8082/v3/api-docs](http://localhost:8082/swagger-ui/index.html])
-    * **Descrizione**: Visualizzazione JSON delle API per il microservizio di gestione valutazioni e
-      feedback.
+    * **URL**: [http://localhost:8082/v3/api-docs](http://localhost:8082/v3/api-docs)
+    * **Descrizione**: Visualizzazione JSON delle API per il microservizio di gestione valutazioni e feedback.
 
 ---
 
-### 4. Testing con Postman
+### 5. Testing con Postman
 
 Una volta che il microservizio è in esecuzione, si potrà inoltre testare con Postman:
 
-1. *
-   *[Cliccando Qui: ./utils/New_Unimol_APIs.postman_collection.json](./utils/New_Unimol_APIs.postman_collection.json)
-   ** sarà possibile arrivare al file json con tutte le mie API già pronte per essere testate, ma
-   occorrerà anche *
-   *[cliccare qui: ./utils/workspace.postman_globals.json](./utils/workspace.postman_globals.json)**
-   per trovare il file con le variabili globali usate in Postman:
+1. **[Cliccando Qui: ./utils/New_Unimol_APIs.postman_collection.json](./utils/New_Unimol_APIs.postman_collection.json)** sarà possibile arrivare al file json con tutte le mie API già pronte per essere testate, ma occorrerà anche **[cliccare qui: ./utils/workspace.postman_globals.json](./utils/workspace.postman_globals.json)** per trovare il file con le variabili globali usate in Postman.
 2. **Aprire Postman.**
 3. **Creare un nuovo Workspace (molto consigliato ma non per forza necessario).**
 4. **In alto a sinistra** sarà possibile cliccare su **"Import"**. Si aprirà una modale.
 5. **Copiare il contenuto** del mio file `New_Unimol_APIs.postman_collection.json`.
 6. **Tornare sulla modale di postman** e incollare il contenuto.
 7. **Ora ripetere lo stesso procedimento** con il file `workspace.postman_globals.json`.
-7. **Postman creerà in automatico le chiamate API all'interno dell'applicazione** che saranno subito
-   testabili (ovviamente con i microservizi su docker avviati in precedenza).
+8. **Postman creerà in automatico le chiamate API all'interno dell'applicazione** che saranno subito testabili (ovviamente con i microservizi avviati tramite `make start`).
 
 ---
+
+### 6. Troubleshooting
+
+#### Docker Swarm già inizializzato
+Se si riceve il messaggio `⚠️ Swarm già inizializzato`, è normale e il sistema continuerà comunque.
+
+#### Porte già in uso
+Se le porte 8080, 8081, 8082 o 15672 sono già occupate, sarà necessario fermare i servizi che le utilizzano o modificare le porte nel `docker-compose.yml`.
+
+#### Problemi con Make su Windows
+Se Make non funziona su Windows dopo l'installazione:
+- Verificare che sia nel PATH di sistema
+- Provare a usare PowerShell come amministratore
+- Considerare l'uso di WSL2 per un'esperienza più simile a Linux
+
+#### Servizi che non si avviano
+Eseguire `make status` per verificare lo stato dei servizi e `make logs` per visualizzare eventuali errori nei log.
+
+---
+
+### 7. Arresto del Sistema
+
+Per fermare completamente il sistema:
+```bash
+make stop
+```
+
+Per una pulizia completa (rimozione di volumi e Swarm):
+```bash
+make clean
+```
+
+**Nota**: `make clean` rimuove anche i dati persistenti nei volumi Docker!
 
 ## EXTRA
 
