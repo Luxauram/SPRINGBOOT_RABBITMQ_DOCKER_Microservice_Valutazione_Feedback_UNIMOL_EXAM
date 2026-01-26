@@ -128,18 +128,61 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build delle immagini Docker definite nel docker-compose
+      # Inizializza Docker Swarm (necessario per docker-compose.yml)
+      - name: Initialize Docker Swarm
+        run: docker swarm init
+
+      # Build delle immagini Docker manualmente (Makefile)
       - name: Build Docker Images
-        run: docker compose build
+        run: |
+          echo "🔨 Building API Gateway..."
+          docker build -f api-gateway/Dockerfile -t unimol/api-gateway:latest .
+          
+          echo "🔨 Building User Role Service..."
+          docker build -f microservice-user-role/Dockerfile -t unimol/microservice-user-role:latest .
+          
+          echo "🔨 Building Assessment Feedback Service..."
+          docker build -f microservice-assessment-feedback/Dockerfile -t unimol/microservice-assessment-feedback:latest .
 
       # Valida la configurazione del docker-compose
       - name: Validate Docker Compose
         run: docker compose config
 
-      # Test di avvio dei container per verificare che siano funzionanti
-      - name: Test Docker Images Start
+      # Deploy su Docker Swarm (Makefile)
+      - name: Deploy Stack on Swarm
         run: |
-          docker compose up -d
+          docker stack deploy -c docker-compose.yml unimol
+          echo "⏳ Waiting for services to start..."
           sleep 30
-          docker compose ps
-          docker compose down
+
+      # Verifica lo stato dei servizi
+      - name: Check Services Status
+        run: |
+          echo "📊 Services status:"
+          docker service ls
+          echo ""
+          echo "🔍 Detailed service status:"
+          docker service ps unimol_api-gateway --no-trunc
+          docker service ps unimol_microservice-user-role --no-trunc
+          docker service ps unimol_microservice-assessment-feedback --no-trunc
+
+      # Controlla i log in caso di problemi
+      - name: Check Logs
+        if: failure()
+        run: |
+          echo "📋 API Gateway logs:"
+          docker service logs unimol_api-gateway --tail 50
+          echo ""
+          echo "📋 User Role Service logs:"
+          docker service logs unimol_microservice-user-role --tail 50
+          echo ""
+          echo "📋 Assessment Service logs:"
+          docker service logs unimol_microservice-assessment-feedback --tail 50
+
+      # Pulizia
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stack rm unimol
+          sleep 10
+          docker swarm leave --force
